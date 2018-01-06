@@ -1,0 +1,65 @@
+body {
+	background-color: rgba(0,0,0,0.85);
+	font-family: Roboto;
+	margin: 0;
+	text-align: center;
+}
+
+h1 {
+	color: rgba(256,256,256,0.9);
+	background: rgba(0,0,256,0.6);
+	font-size: 2em;
+	padding: 5px;
+	font-weight: normal;
+	text-transform: uppercase;
+	margin: 0;
+}
+
+#navpanel {
+	background: rgba(256,256,256,0.9);
+	border: none;
+	margin: 0;
+}
+
+button {
+	border: none;
+	background: none;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: steelblue;
+	font-weight: 700;
+	margin: 0;
+	outline: none;
+	height: 100%;
+	font-size: 1.2em;
+	transition: all 0.3s;
+}
+
+button:hover {
+	color: white;
+	background: steelblue;
+}
+
+.selected {
+	color: white;
+	background: steelblue;	
+}
+
+#msg {
+	display: inline-block;
+	width: 20%;
+}
+
+#colorbox {
+	max-width: 600px;
+	margin: 10px auto;
+}
+
+.box {
+	width: 30%;
+	padding-bottom: 30%;
+	background: orange;
+	margin: 1.66%;
+	float: left;
+	border-radius: 20%;
+}
