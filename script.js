@@ -1,76 +1,110 @@
-var colors = [
-"rgb(250, 4, 20)",
-"rgb(25, 20, 250)",
-"rgb(20, 250, 0)",
-"rgb(250, 250, 20)",
-"rgb(250, 20, 250)",
-"rgb(20, 250, 250)"
-];
-var modeSize = colors.length;
-var correctAns = colors[Math.floor(Math.random()*modeSize)]; //return the String "rgb(blaH)"
-document.querySelector("h1 span").innerHTML = correctAns;
-var msg = document.querySelector("#msg");
-var resetBtn = document.querySelector("#reset");
-var box = document.querySelectorAll(".box");
-var modeBtn = document.querySelectorAll(".mode");
+var numSquares = 6;
+var colors = [];
+var pickedColor;
+var squares = document.querySelectorAll(".box");
+var colorDisplay = document.getElementById("colorDisplay");
+var messageDisplay = document.querySelector("#msg");
+var h1 = document.querySelector("h1");
+var resetButton = document.querySelector("#reset");
+var modeButtons = document.querySelectorAll(".mode");
 
-generateColorBoxes();
-function generateColorBoxes() {
-	for(var i = 0;i<box.length;i++) {
-		if(i===colors.indexOf(correctAns)) {
-			box[i].style.backgroundColor = correctAns;
-			continue;
-		}
-		var r = Math.floor(Math.random()*256);
-		var g = Math.floor(Math.random()*256);
-		var b = Math.floor(Math.random()*256);
-		box[i].style.backgroundColor = "rgb("+r+", "+g+", "+b+")";
+
+init();
+
+function init(){
+	setupModeButtons();
+	setupSquares();
+	reset();
+}
+
+function setupModeButtons(){
+	for(var i = 0; i < modeButtons.length; i++){
+		modeButtons[i].addEventListener("click", function(){
+			modeButtons[0].classList.remove("selected");
+			modeButtons[1].classList.remove("selected");
+			this.classList.add("selected");
+			this.textContent === "Easy" ? numSquares = 3: numSquares = 6;
+			reset();
+		});
 	}
 }
 
-for(var i = 0; i<box.length;i++) {
-	box[i].addEventListener("click",function() {
-		if(this.style.backgroundColor !== correctAns) {
-			//display hard luck
-			msg.innerHTML = "Oops, try again!";
-			//vanish in thin air
-			this.classList.add("makeTransparent");
-		}
-		else {
-			//change span message
-			msg.innerHTML = "Correct!";
-			//change h1 background color to correctAns
-			document.querySelector("h1").style.backgroundColor = correctAns;
-			//change text from "NEW COLORS" to "PLAY AGAIN?"
-			resetBtn.textContent = "play again?";
-			//change all box colors to correctAns & reset opacity
-			for(var j=0;j<box.length;j++) {
-				box[j].classList.remove("makeTransparent");
-				box[j].style.backgroundColor = correctAns;
+function setupSquares(){
+	for(var i = 0; i < squares.length; i++){
+	//add click listeners to squares
+		squares[i].addEventListener("click", function(){
+			//grab color of clicked square
+			var clickedColor = this.style.background;
+			//compare color to pickedColor
+			if(clickedColor === pickedColor){
+				messageDisplay.textContent = "Correct!";
+				resetButton.textContent = "Play Again?"
+				changeColors(clickedColor);
+				h1.style.background = clickedColor;
+			} else {
+				this.style.background = "rgba(1,1,1,0)";
+				messageDisplay.textContent = "Try Again"
 			}
+		});
+	}
+}
+
+function reset(){
+	colors = generateRandomColors(numSquares);
+	//pick a new random color from array
+	pickedColor = pickColor();
+	//change colorDisplay to match picked Color
+	colorDisplay.textContent = pickedColor;
+	resetButton.textContent = "New Colors"
+	messageDisplay.textContent = "";
+	//change colors of squares
+	for(var i = 0; i < squares.length; i++){
+		if(colors[i]){
+			squares[i].style.display = "block"
+			squares[i].style.background = colors[i];
+		} else {
+			squares[i].style.display = "none";
 		}
-	});
+	}
+	h1.style.background = "steelblue";
 }
 
-function reloadPage() {
-	document.location.reload();
+resetButton.addEventListener("click", function(){
+	reset();
+})
+
+function changeColors(color){
+	//loop through all squares
+	for(var i = 0; i < squares.length; i++){
+		//change each color to match given color
+		squares[i].style.background = color;
+	}
 }
 
-resetBtn.addEventListener("click", function() {
-	reloadPage();
-});
-
-for(var i = 0;i<modeBtn.length;i++) {
-	modeBtn[i].addEventListener("click",function() {
-		//reset page
-		modeSize = 3;
-		//remove selected from all
-		for(var j = 0;j<modeBtn.length;j++) {
-			modeBtn[j].classList.remove("selected");
-		}
-		//add selected to the currently selected option
-		this.classList.add("selected");
-		//bring down mode to easy
-
-	});
+function pickColor(){
+	var random = Math.floor(Math.random() * colors.length);
+	return colors[random];
 }
+
+function generateRandomColors(num){
+	//make an array
+	var arr = []
+	//repeat num times
+	for(var i = 0; i < num; i++){
+		//get random color and push into arr
+		arr.push(randomColor())
+	}
+	//return that array
+	return arr;
+}
+
+function randomColor(){
+	//pick a "red" from 0 - 255
+	var r = Math.floor(Math.random() * 256);
+	//pick a "green" from  0 -255
+	var g = Math.floor(Math.random() * 256);
+	//pick a "blue" from  0 -255
+	var b = Math.floor(Math.random() * 256);
+	return "rgb(" + r + ", " + g + ", " + b + ")";
+}
+
